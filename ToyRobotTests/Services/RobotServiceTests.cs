@@ -130,9 +130,8 @@ namespace ToyRobotTests.Services
 
             var state = service.ReportState();
 
-            state.PositionX.ShouldBe(2);
-            state.PositionY.ShouldBe(1);
-            state.Orientation.ShouldBe(DirectionEnum.South);
+            state.Success.ShouldBeTrue();
+            state.Message.ShouldBe("2,1,SOUTH");
         }
 
         [Fact]
@@ -143,7 +142,8 @@ namespace ToyRobotTests.Services
 
             var state = service.ReportState();
 
-            state.ShouldBeNull();
+            state.Success.ShouldBeFalse();
+            state.Message.ShouldBe(ResponseMessageConstants.PositionNotInitialised);
         }
 
         [Theory]

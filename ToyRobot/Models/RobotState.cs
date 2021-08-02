@@ -14,5 +14,7 @@ namespace ToyRobot.Models
             PositionY = positionY;
             Orientation = orientation;
         }
+
+        public bool Ready => Orientation != DirectionEnum.Unknown;
     }
 }

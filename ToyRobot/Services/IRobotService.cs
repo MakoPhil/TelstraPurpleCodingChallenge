@@ -7,7 +7,7 @@ namespace ToyRobot.Services
     {
         Result<RobotState> SetState(int x, int y, DirectionEnum orientation);
         Result<RobotState> SetState(int x, int y);
-        RobotState ReportState();
+        Result<RobotState> ReportState();
         Result<RobotState> Move();
         Result<RobotState> TurnLeft();
         Result<RobotState> TurnRight();

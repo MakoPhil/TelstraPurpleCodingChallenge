@@ -28,7 +28,7 @@ namespace ToyRobot.Services
 
         public Result<RobotState> SetState(int x, int y)
         {
-            if (_state == null)
+            if (_state == null || !_state.Ready)
             {
                 return Result<RobotState>.Failed(_state, ResponseMessageConstants.PositionNotInitialised);
             }
@@ -36,14 +36,16 @@ namespace ToyRobot.Services
             return SetState(x, y, _state.Orientation);
         }
 
-        public RobotState ReportState()
+        public Result<RobotState> ReportState()
         {
-            return _state;
+            if (_state == null || !_state.Ready) return Result<RobotState>.Failed(null, ResponseMessageConstants.PositionNotInitialised);
+
+            return Result<RobotState>.Succeeded(_state, $"{_state.PositionX},{_state.PositionY},{_state.Orientation.ToString().ToUpper()}");
         }
 
         public Result<RobotState> Move()
         {
-            if (_state == null)
+            if (_state == null || !_state.Ready)
             {
                 return Result<RobotState>.Failed(_state, ResponseMessageConstants.PositionNotInitialised);
             }
@@ -79,7 +81,7 @@ namespace ToyRobot.Services
 
         public Result<RobotState> TurnLeft()
         {
-            if (_state == null)
+            if (_state == null || !_state.Ready)
             {
                 return Result<RobotState>.Failed(_state, ResponseMessageConstants.PositionNotInitialised);
             }
@@ -109,7 +111,7 @@ namespace ToyRobot.Services
 
         public Result<RobotState> TurnRight()
         {
-            if (_state == null)
+            if (_state == null || !_state.Ready)
             {
                 return Result<RobotState>.Failed(_state, ResponseMessageConstants.PositionNotInitialised);
             }

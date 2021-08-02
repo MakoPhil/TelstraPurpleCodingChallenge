@@ -9,7 +9,6 @@ namespace ToyRobot.Services
     public class CommandParserService : ICommandParserService
     {
         private IRobotService _robotService;
-        private bool _isReady = false;
 
         public CommandParserService(IRobotService robotService)
         {
@@ -30,80 +29,17 @@ namespace ToyRobot.Services
                     case CommandEnum.Place:
                         return placeCommand(commandParts.Skip(1).ToArray());
                     case CommandEnum.Report:
-                        return Report();
+                        return _robotService.ReportState();
                     case CommandEnum.Left:
-                        return Left();
+                        return _robotService.TurnLeft();
                     case CommandEnum.Right:
-                        return Right();
+                        return _robotService.TurnRight();
                     case CommandEnum.Move:
-                        return Move();
+                        return _robotService.Move();
                 }
             }
 
             return Result.Failed($"{ResponseMessageConstants.CommandUnknown} {commandParts[0]}.");
-        }
-
-        public Result Left()
-        {
-            if (!_isReady)
-            {
-                return Result.Failed(ResponseMessageConstants.PositionNotInitialised);
-            }
-
-            return _robotService.TurnLeft();
-        }
-
-        public Result Right()
-        {
-            if (!_isReady)
-            {
-                return Result.Failed(ResponseMessageConstants.PositionNotInitialised);
-            }
-
-            return _robotService.TurnRight();
-        }
-
-        public Result Move()
-        {
-            if (!_isReady)
-            {
-                return Result.Failed(ResponseMessageConstants.PositionNotInitialised);
-            }
-
-            return _robotService.Move();
-        }
-
-        public Result Place(int xPosition, int yPosition, DirectionEnum orientation)
-        {
-            var result = _robotService.SetState(xPosition, yPosition, orientation);
-
-            if (result.Success) _isReady = true;
-
-            return result;
-        }
-
-        public Result Place(int xPosition, int yPosition)
-        {
-            if (!_isReady)
-            {
-                return Result.Failed(ResponseMessageConstants.PositionNotInitialised);
-            }
-
-            var result = _robotService.SetState(xPosition, yPosition);
-
-            return result;
-        }
-
-        public Result<RobotState> Report()
-        {
-            if (!_isReady)
-            {
-                return Result<RobotState>.Failed(null, ResponseMessageConstants.PositionNotInitialised);
-            }
-
-            var result = _robotService.ReportState();
-
-            return Result<RobotState>.Succeeded(result, $"{result.PositionX},{result.PositionY},{result.Orientation.ToString().ToUpper()}");
         }
 
         private Result placeCommand(string[] arguments)
@@ -128,13 +64,13 @@ namespace ToyRobot.Services
                 int.TryParse(splitArguments[1], out y) &&
                 parseEnum<DirectionEnum>(splitArguments[2], out orientation))
             {
-                return Place(x, y, orientation);
+                return _robotService.SetState(x, y, orientation);
             }
             else if (splitArguments.Length == 2 &&
               int.TryParse(splitArguments[0], out x) &&
               int.TryParse(splitArguments[1], out y))
             {
-                return Place(x, y);
+                return _robotService.SetState(x, y);
             }
 
             return Result.Failed(ResponseMessageConstants.CommandInvalidArguments);
