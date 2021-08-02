@@ -23,7 +23,7 @@ namespace ToyRobot.Services
 
             CommandEnum selectedCommand;
 
-            if (Enum.TryParse<CommandEnum>(commandParts[0], true, out selectedCommand))
+            if (parseEnum<CommandEnum>(commandParts[0], out selectedCommand))
             {
                 switch (selectedCommand)
                 {
@@ -126,7 +126,7 @@ namespace ToyRobot.Services
             if (splitArguments.Length == 3 &&
                 int.TryParse(splitArguments[0], out x) &&
                 int.TryParse(splitArguments[1], out y) &&
-                Enum.TryParse<DirectionEnum>(splitArguments[2], true, out orientation))
+                parseEnum<DirectionEnum>(splitArguments[2], out orientation))
             {
                 return Place(x, y, orientation);
             }
@@ -138,6 +138,14 @@ namespace ToyRobot.Services
             }
 
             return Result.Failed(ResponseMessageConstants.CommandInvalidArguments);
+        }
+
+        private bool parseEnum<T>(string value, out T result) where T : struct, Enum
+        {
+            return Enum.TryParse<T>(value, true, out result) &&
+                !result.Equals(default(T)) &&
+                Enum.IsDefined<T>(result) &&
+                string.Equals(value, result.ToString(), StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

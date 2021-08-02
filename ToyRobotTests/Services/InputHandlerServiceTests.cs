@@ -273,6 +273,7 @@ namespace ToyRobotTests.Services
         [InlineData("0.1,0.1,text")]
         [InlineData("0,text,text")]
         [InlineData("text,0,text")]
+        [InlineData("1,0,1")]
         public void DoNotPlaceWithInvalidArguments(string arguments)
         {
             InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
@@ -438,6 +439,18 @@ namespace ToyRobotTests.Services
             result.Message.ShouldBe("1,2,NORTH");
 
             _robotServiceMock.Verify(r => r.ReportState(), Times.Once());
+        }
+
+        public void IgnoreNumericCommands()
+        {
+            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+
+            var result = service.Command("2");
+
+            result.Success.ShouldBeFalse();
+            result.Message.ShouldBe($"{ResponseMessageConstants.CommandUnknown} {2}");
+
+            _robotServiceMock.Verify(r => r.ReportState(), Times.Never());
         }
     }
 }
