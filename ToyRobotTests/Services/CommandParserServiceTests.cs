@@ -8,11 +8,11 @@ using Xunit;
 
 namespace ToyRobotTests.Services
 {
-    public class InputHandlerServiceTests
+    public class CommandParserServiceTests
     {
         private Mock<IRobotService> _robotServiceMock;
 
-        public InputHandlerServiceTests()
+        public CommandParserServiceTests()
         {
             _robotServiceMock = new Mock<IRobotService>();
         }
@@ -20,7 +20,7 @@ namespace ToyRobotTests.Services
         [Fact]
         public void ValidPlacement()
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             _robotServiceMock.Setup(r => r.SetState(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DirectionEnum>()))
                 .Returns(Result<RobotState>.Succeeded(new RobotState(4, 5, DirectionEnum.East), ResponseMessageConstants.PositionSet));
@@ -41,7 +41,7 @@ namespace ToyRobotTests.Services
         [Fact]
         public void InvalidPlacement()
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             _robotServiceMock.Setup(r => r.SetState(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DirectionEnum>()))
                 .Returns(Result<RobotState>.Failed(new RobotState(4, 5, DirectionEnum.East), ResponseMessageConstants.PositionInvalid));
@@ -62,7 +62,7 @@ namespace ToyRobotTests.Services
         [Fact]
         public void PartialPlacementWithoutInitialPlacement()
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             var result = service.Place(4, 5);
 
@@ -86,7 +86,7 @@ namespace ToyRobotTests.Services
         [Fact]
         public void TurnLeft()
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             _robotServiceMock.Setup(r => r.SetState(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DirectionEnum>()))
                 .Returns(Result<RobotState>.Succeeded(new RobotState(4, 5, DirectionEnum.East), ResponseMessageConstants.PositionSet));
@@ -107,7 +107,7 @@ namespace ToyRobotTests.Services
         [Fact]
         public void CannotTurnLeftWithoutInitialState()
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             _robotServiceMock.Setup(r => r.TurnLeft())
                 .Returns(Result<RobotState>.Succeeded(null, ResponseMessageConstants.RobotTurnedLeft));
@@ -123,7 +123,7 @@ namespace ToyRobotTests.Services
         [Fact]
         public void TurnRight()
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             _robotServiceMock.Setup(r => r.SetState(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DirectionEnum>()))
                 .Returns(Result<RobotState>.Succeeded(new RobotState(4, 5, DirectionEnum.East), ResponseMessageConstants.PositionSet));
@@ -144,7 +144,7 @@ namespace ToyRobotTests.Services
         [Fact]
         public void CannotTurnRightWithoutInitialState()
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             _robotServiceMock.Setup(r => r.TurnRight())
                 .Returns(Result<RobotState>.Succeeded(null, ResponseMessageConstants.RobotTurnedRight));
@@ -160,7 +160,7 @@ namespace ToyRobotTests.Services
         [Fact]
         public void MoveForwards()
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             _robotServiceMock.Setup(r => r.SetState(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DirectionEnum>()))
                 .Returns(Result<RobotState>.Succeeded(new RobotState(4, 5, DirectionEnum.East), ResponseMessageConstants.PositionSet));
@@ -181,7 +181,7 @@ namespace ToyRobotTests.Services
         [Fact]
         public void CannotMoveForwardsWithoutInitialState()
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             _robotServiceMock.Setup(r => r.Move())
                 .Returns(Result<RobotState>.Succeeded(null, ResponseMessageConstants.RobotMoved));
@@ -197,7 +197,7 @@ namespace ToyRobotTests.Services
         [Fact]
         public void ReportState()
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             _robotServiceMock.Setup(r => r.SetState(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DirectionEnum>()))
                 .Returns(Result<RobotState>.Succeeded(new RobotState(4, 5, DirectionEnum.East), ResponseMessageConstants.PositionSet));
@@ -222,7 +222,7 @@ namespace ToyRobotTests.Services
         [Fact]
         public void CannotReportStateWithoutInitialState()
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             _robotServiceMock.Setup(r => r.ReportState())
                 .Returns(null as RobotState);
@@ -238,7 +238,7 @@ namespace ToyRobotTests.Services
         [Fact]
         public void DismissUnknownCommand()
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             var response = service.Command("  Nonsense  Command  ");
 
@@ -249,7 +249,7 @@ namespace ToyRobotTests.Services
         [Fact]
         public void DoNotPlaceWithNoArguments()
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             var response = service.Command("PLACE");
 
@@ -260,7 +260,7 @@ namespace ToyRobotTests.Services
         [Fact]
         public void DoNotPlaceWithTooManyArguments()
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             var response = service.Command("PLACE 4 5 south");
 
@@ -276,7 +276,7 @@ namespace ToyRobotTests.Services
         [InlineData("1,0,1")]
         public void DoNotPlaceWithInvalidArguments(string arguments)
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             var response = service.Command($"PLACE {arguments}");
 
@@ -290,7 +290,7 @@ namespace ToyRobotTests.Services
         [InlineData("PlAcE 14,0,EaSt", 14, 0, DirectionEnum.East)]
         public void DoPlace(string command, int xInput, int yInput, DirectionEnum orientationInput)
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             _robotServiceMock.Setup(r => r.SetState(
                 It.Is<int>(x => x == xInput),
@@ -317,7 +317,7 @@ namespace ToyRobotTests.Services
         [InlineData("PlAcE 14,0", 14, 0)]
         public void DoPartialPlace(string command, int xInput, int yInput)
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             _robotServiceMock.Setup(r => r.SetState(
                 It.Is<int>(x => x == 1),
@@ -351,7 +351,7 @@ namespace ToyRobotTests.Services
         [InlineData("LEFT")]
         public void Left(string command)
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             _robotServiceMock.Setup(r => r.SetState(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DirectionEnum>()))
                 .Returns(Result<RobotState>.Succeeded(new RobotState(1, 2, DirectionEnum.North), ResponseMessageConstants.PositionSet));
@@ -375,7 +375,7 @@ namespace ToyRobotTests.Services
         [InlineData("RIGHT")]
         public void Right(string command)
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             _robotServiceMock.Setup(r => r.SetState(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DirectionEnum>()))
                 .Returns(Result<RobotState>.Succeeded(new RobotState(1, 2, DirectionEnum.North), ResponseMessageConstants.PositionSet));
@@ -399,7 +399,7 @@ namespace ToyRobotTests.Services
         [InlineData("MOVE")]
         public void Move(string command)
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             _robotServiceMock.Setup(r => r.SetState(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DirectionEnum>()))
                 .Returns(Result<RobotState>.Succeeded(new RobotState(1, 2, DirectionEnum.North), ResponseMessageConstants.PositionSet));
@@ -423,7 +423,7 @@ namespace ToyRobotTests.Services
         [InlineData("REPORT")]
         public void Report(string command)
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             _robotServiceMock.Setup(r => r.SetState(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DirectionEnum>()))
                 .Returns(Result<RobotState>.Succeeded(new RobotState(1, 2, DirectionEnum.North), ResponseMessageConstants.PositionSet));
@@ -443,7 +443,7 @@ namespace ToyRobotTests.Services
 
         public void IgnoreNumericCommands()
         {
-            InputHandlerService service = new InputHandlerService(_robotServiceMock.Object);
+            CommandParserService service = new CommandParserService(_robotServiceMock.Object);
 
             var result = service.Command("2");
 

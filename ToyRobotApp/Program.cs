@@ -29,7 +29,7 @@ namespace ToyRobot
             services.AddSingleton<ToyRobotConfig>(config);
             services.AddTransient<ToyRobotApp>();
             services.AddTransient<IRobotService, RobotService>();
-            services.AddTransient<IInputHandlerService, InputHandlerService>();
+            services.AddTransient<ICommandParserService, CommandParserService>();
 
             return services;
         }

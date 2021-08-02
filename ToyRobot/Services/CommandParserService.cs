@@ -6,12 +6,12 @@ using ToyRobot.Models;
 
 namespace ToyRobot.Services
 {
-    public class InputHandlerService : IInputHandlerService
+    public class CommandParserService : ICommandParserService
     {
         private IRobotService _robotService;
         private bool _isReady = false;
 
-        public InputHandlerService(IRobotService robotService)
+        public CommandParserService(IRobotService robotService)
         {
             _robotService = robotService;
         }

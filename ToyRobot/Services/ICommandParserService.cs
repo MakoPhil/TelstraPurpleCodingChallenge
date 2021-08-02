@@ -3,7 +3,7 @@ using ToyRobot.Models;
 
 namespace ToyRobot.Services
 {
-    public interface IInputHandlerService
+    public interface ICommandParserService
     {
         Result Command(string command);
         Result Place(int xPosition, int yPosition, DirectionEnum orientation);

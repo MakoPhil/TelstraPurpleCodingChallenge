@@ -5,11 +5,11 @@ namespace ToyRobot
 {
     public class ToyRobotApp
     {
-        private IInputHandlerService _inputHandlerService;
+        private ICommandParserService _commandParserService;
 
-        public ToyRobotApp(IInputHandlerService inputHandlerService)
+        public ToyRobotApp(ICommandParserService commandParserService)
         {
-            _inputHandlerService = inputHandlerService;
+            _commandParserService = commandParserService;
         }
 
         public void Run()
@@ -25,7 +25,7 @@ namespace ToyRobot
 
                 if (input.Trim().Equals("quit", StringComparison.OrdinalIgnoreCase)) break;
 
-                var response = _inputHandlerService.Command(input);
+                var response = _commandParserService.Command(input);
 
                 if (!response.Success)
                 {
