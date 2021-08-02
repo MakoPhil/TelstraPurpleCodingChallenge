@@ -23,7 +23,7 @@ namespace ToyRobot
             {
                 var input = Console.ReadLine();
 
-                if (input.Trim().ToLower() == "quit") break;
+                if (input.Trim().Equals("quit", StringComparison.OrdinalIgnoreCase)) break;
 
                 var response = _inputHandlerService.Command(input);
 
